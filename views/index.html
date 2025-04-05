@@ -8,38 +8,44 @@
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-    <!-- 聊天容器 -->
-    <div class="chat-container">
-        <!-- 聊天头部 -->
-        <header class="chat-header">
-            <h1>AI助手</h1>
-            <p>与AI助手对话，获取帮助</p>
-        </header>
-        
-        <!-- 聊天消息区域 -->
-        <div class="chat-messages" id="chat-messages">
-            <!-- 默认的机器人消息 -->
-            <div class="message bot-message">
-                <p>你好！我是AI助手，有什么我可以帮助你的吗？</p>
+    <!-- 主容器 -->
+    <div class="main-container">
+        <!-- 聊天容器 -->
+        <div class="chat-container">
+            <!-- 聊天头部 -->
+            <header class="chat-header">
+                <h1>AI助手</h1>
+                <p>与AI助手对话，获取帮助</p>
+            </header>
+            
+            <!-- 聊天消息区域 -->
+            <div class="chat-messages" id="chat-messages">
+                <!-- 默认的机器人消息 -->
+                <div class="message bot-message">
+                    <p>你好！我是AI助手，有什么我可以帮助你的吗？</p>
+                </div>
+            </div>
+            
+            <!-- 输入区域 -->
+            <div class="input-area">
+                <input 
+                    type="text" 
+                    id="user-input" 
+                    placeholder="输入消息..." 
+                    autocomplete="off"
+                    aria-label="输入消息"
+                >
+                <button id="send-button" aria-label="发送消息">发送</button>
+                <button id="generate-button" aria-label="生成结果">生成结果</button>
             </div>
         </div>
-        
-        <!-- 生成的内容显示区域 -->
-        <div class="generated-content" id="generated-content">
-            <!-- 生成的内容将在这里显示 -->
-        </div>
-        
-        <!-- 输入区域 -->
-        <div class="input-area">
-            <input 
-                type="text" 
-                id="user-input" 
-                placeholder="输入消息..." 
-                autocomplete="off"
-                aria-label="输入消息"
-            >
-            <button id="send-button" aria-label="发送消息">发送</button>
-            <button id="generate-button" aria-label="生成结果">生成结果</button>
+
+        <!-- 生成展示框 -->
+        <div class="display-container" id="display-container">
+            <h2>生成的内容</h2>
+            <div id="generated-content">
+                <p>生成的内容将在这里显示。</p>
+            </div>
         </div>
     </div>
 

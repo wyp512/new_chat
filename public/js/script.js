@@ -10,6 +10,9 @@ document.addEventListener('DOMContentLoaded', function() {
         const message = userInput.value.trim();
         if (message === '') return;
         
+        console.log('发送消息:', message);
+        console.log('收到消息:', message);
+        
         // 添加用户消息到聊天界面
         addMessage(message, 'user');
         userInput.value = '';
