@@ -28,9 +28,10 @@ app.get('/', (req, res) => {
 app.post('/api/chat', async (req, res) => {
   try {
     const { message } = req.body;
-    
+
+    // 使用 DeepSeek-R1 模型 (deepseek-reasoner)
     const completion = await openai.chat.completions.create({
-      model: "deepseek-chat",
+      model: "deepseek-reasoner", // DeepSeek 最新推出的推理模型
       messages: [
         {
           role: "user",
@@ -49,6 +50,31 @@ app.post('/api/chat', async (req, res) => {
       details: error.message
     });
   }
+});
+
+// 生成内容API
+app.post('/api/generate', async (req, res) => {
+    try {
+        const { message } = req.body;
+
+        if (!message) {
+            return res.status(400).json({ error: 'Message is required' });
+        }
+
+        // 模拟生成内容逻辑
+        const generatedContent = {
+            content: `这是基于你的提问 "${message}" 生成的示例内容。`,
+            code: `console.log("这是基于你的提问生成的代码示例");`
+        };
+
+        res.json(generatedContent);
+    } catch (error) {
+        console.error('Error generating content:', error); // 更详细的日志
+        res.status(500).json({ 
+            error: 'Failed to generate content',
+            details: error.message // 返回错误详情
+        });
+    }
 });
 
 // 启动服务器

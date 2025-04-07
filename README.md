@@ -7,6 +7,7 @@
 - 与AI助手进行实时对话
 - 生成代码、文本等内容
 - 简洁美观的用户界面
+- **支持 DeepSeek-R1 推理模型 (deepseek-reasoner)**
 
 ## 安装与运行
 
@@ -25,3 +26,4 @@
 
 1. 确保 `DEEPSEEK_API_URL` 是正确的 API 端点，例如 `https://api.deepseek.com/v1/chat`。
 2. 如果遇到 `Not Found` 错误，请检查 API 密钥和 URL 是否正确。
+3. **通过指定 `model='deepseek-reasoner'`，即可调用 DeepSeek-R1 推理模型。**

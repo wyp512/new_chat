@@ -6,6 +6,7 @@
     <title>AI助手</title>
     <!-- 引入样式表 -->
     <link rel="stylesheet" href="/css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 <body>
     <!-- 主容器 -->
@@ -37,13 +38,14 @@
                 >
                 <button id="send-button" aria-label="发送消息">发送</button>
                 <button id="generate-button" aria-label="生成结果">生成结果</button>
+                <button id="stop-button" aria-label="终止生成">终止</button>
             </div>
         </div>
 
         <!-- 生成展示框 -->
         <div class="display-container" id="display-container">
             <h2>生成的内容</h2>
-            <div id="generated-content">
+            <div id="generated-content" style="display: none;">
                 <p>生成的内容将在这里显示。</p>
             </div>
         </div>

@@ -96,6 +96,14 @@ body {
     background-color: #3a5a80;
 }
 
+.input-area button#stop-button {
+    background-color: #d9534f;
+}
+
+.input-area button#stop-button:hover {
+    background-color: #c9302c;
+}
+
 /* 预览和代码样式 */
 .preview-tab, .code-tab {
     padding: 10px;
