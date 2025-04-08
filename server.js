@@ -38,11 +38,25 @@ app.post('/api/chat', async (req, res) => {
           content: message
         }
       ],
-      temperature: 0.7
+      temperature: 0.7,
+      stream: true // 启用流式输出以获取思考过程
     });
 
-    const reply = completion.choices[0].message.content;
-    res.json({ reply });
+    let reply = '';
+    let thoughts = [];
+
+    for await (const chunk of completion) {
+      if (chunk.choices[0]?.delta?.content) {
+        const content = chunk.choices[0].delta.content;
+        reply += content;
+        // 收集思考过程
+        if (content.includes('思考:') || content.includes('分析:') || content.includes('推理:')) {
+          thoughts.push(content);
+        }
+      }
+    }
+
+    res.json({ reply, thoughts });
   } catch (error) {
     console.error('DeepSeek API Error:', error);
     res.status(500).json({ 
@@ -52,30 +66,7 @@ app.post('/api/chat', async (req, res) => {
   }
 });
 
-// 生成内容API
-app.post('/api/generate', async (req, res) => {
-    try {
-        const { message } = req.body;
 
-        if (!message) {
-            return res.status(400).json({ error: 'Message is required' });
-        }
-
-        // 模拟生成内容逻辑
-        const generatedContent = {
-            content: `这是基于你的提问 "${message}" 生成的示例内容。`,
-            code: `console.log("这是基于你的提问生成的代码示例");`
-        };
-
-        res.json(generatedContent);
-    } catch (error) {
-        console.error('Error generating content:', error); // 更详细的日志
-        res.status(500).json({ 
-            error: 'Failed to generate content',
-            details: error.message // 返回错误详情
-        });
-    }
-});
 
 // 启动服务器
 app.listen(PORT, () => {

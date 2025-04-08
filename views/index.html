@@ -4,30 +4,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI助手</title>
-    <!-- 引入样式表 -->
     <link rel="stylesheet" href="/css/style.css">
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- 主容器 -->
     <div class="main-container">
-        <!-- 聊天容器 -->
+        <!-- 左侧聊天区域 -->
         <div class="chat-container">
-            <!-- 聊天头部 -->
             <header class="chat-header">
-                <h1>AI助手</h1>
-                <p>与AI助手对话，获取帮助</p>
+                <div class="header-content">
+                    <h1>AI助手</h1>
+                    <p>与AI助手对话，获取帮助</p>
+                </div>
             </header>
             
-            <!-- 聊天消息区域 -->
             <div class="chat-messages" id="chat-messages">
-                <!-- 默认的机器人消息 -->
                 <div class="message bot-message">
-                    <p>你好！我是AI助手，有什么我可以帮助你的吗？</p>
+                    <div class="message-content">
+                        <p>你好！我是AI助手，有什么我可以帮助你的吗？</p>
+                        <span class="message-time">刚刚</span>
+                    </div>
                 </div>
             </div>
             
-            <!-- 输入区域 -->
             <div class="input-area">
                 <input 
                     type="text" 
@@ -37,21 +37,33 @@
                     aria-label="输入消息"
                 >
                 <button id="send-button" aria-label="发送消息">发送</button>
-                <button id="generate-button" aria-label="生成结果">生成结果</button>
                 <button id="stop-button" aria-label="终止生成">终止</button>
             </div>
         </div>
 
-        <!-- 生成展示框 -->
-        <div class="display-container" id="display-container">
-            <h2>生成的内容</h2>
-            <div id="generated-content" style="display: none;">
-                <p>生成的内容将在这里显示。</p>
+        <!-- 右侧生成结果展示区域 -->
+        <div class="result-container">
+            <h2>生成结果</h2>
+            <p class="subtitle">查看AI生成的内容</p>
+            
+            <div class="tabs">
+                <button class="tab-button active" data-tab="preview">预览</button>
+                <button class="tab-button" data-tab="code">代码</button>
+            </div>
+            
+            <div class="tab-content">
+                <div id="preview-tab" class="tab-pane active">
+                    <div id="generated-content" class="preview-content">
+                        生成的内容将显示在这里
+                    </div>
+                </div>
+                <div id="code-tab" class="tab-pane">
+                    <pre><code id="generated-code" class="code-content"></code></pre>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- 引入脚本文件 -->
     <script src="/js/script.js"></script>
 </body>
 </html>

@@ -2,11 +2,13 @@ document.addEventListener('DOMContentLoaded', function() {
     const chatMessages = document.getElementById('chat-messages');
     const userInput = document.getElementById('user-input');
     const sendButton = document.getElementById('send-button');
-    const generateButton = document.getElementById('generate-button');
     const generatedContent = document.getElementById('generated-content');
-    const stopButton = document.getElementById('stop-button'); // 添加终止按钮
+    const generatedCode = document.getElementById('generated-code');
+    const stopButton = document.getElementById('stop-button');
+    const tabButtons = document.querySelectorAll('.tab-button');
+    const tabPanes = document.querySelectorAll('.tab-pane');
 
-    let abortController; // 用于终止生成内容的控制器
+    let abortController;
 
     // 发送消息函数
     async function sendMessage() {
@@ -33,62 +35,15 @@ document.addEventListener('DOMContentLoaded', function() {
             const data = await response.json();
             
             // 添加AI回复到聊天界面
-            addMessage(data.reply, 'bot');
+            addMessage(data.reply, 'bot', data.thoughts);
+
+            // 清空右侧展示区
+            generatedContent.style.display = 'none';
+            generatedContent.innerHTML = '';
+
         } catch (error) {
             console.error('Error:', error);
             addMessage('抱歉，发生了错误，请稍后再试。', 'bot');
-        }
-    }
-
-    // 生成内容函数
-    async function generateContent() {
-        const message = userInput.value.trim();
-        if (message === '') {
-            alert('请输入内容后再生成结果！'); // 添加提示
-            return;
-        }
-
-        abortController = new AbortController(); // 创建新的控制器
-
-        try {
-            // 调用后端API生成内容
-            const response = await fetch('/api/generate', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ message }),
-                signal: abortController.signal // 绑定控制器信号
-            });
-
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.error || '生成内容请求失败');
-            }
-
-            const data = await response.json();
-
-            // 显示生成的内容
-            generatedContent.style.display = 'block';
-            generatedContent.innerHTML = `
-                <h3>这是基于你的提问 "${message}" 生成的内容示例</h3>
-                <div class="preview-tab">
-                    ${marked.parse(data.content || '这是基于你的提问生成的示例内容。')} <!-- 修复调用方式 -->
-                </div>
-                <div class="code-tab">
-                    <pre>${data.code || 'console.log("这是基于你的提问生成的代码示例");'}</pre>
-                </div>
-            `;
-        } catch (error) {
-            if (error.name === 'AbortError') {
-                console.log('生成内容请求已被终止');
-                generatedContent.style.display = 'block';
-                generatedContent.innerHTML = `<p>生成内容已被终止。</p>`;
-            } else {
-                console.error('Error:', error);
-                generatedContent.style.display = 'block';
-                generatedContent.innerHTML = `<p>生成内容时出错：${error.message}</p>`; // 显示详细错误信息
-            }
         }
     }
 
@@ -100,30 +55,93 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    // 获取格式化的时间
+    function getFormattedTime() {
+        const now = new Date();
+        return now.toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' });
+    }
+
+    // 存储每条消息的思考过程
+    const messageThoughts = new Map();
+
     // 添加消息到聊天界面
-    function addMessage(text, sender) {
+    function addMessage(text, sender, thoughts = null) {
         const messageDiv = document.createElement('div');
         messageDiv.classList.add('message', `${sender}-message`);
-        messageDiv.innerHTML = `<p>${text}</p>`;
+        
+        const messageContent = document.createElement('div');
+        messageContent.classList.add('message-content');
+        messageContent.innerHTML = `<p>${text}</p>`;
+        
+        const timeSpan = document.createElement('span');
+        timeSpan.classList.add('message-time');
+        timeSpan.textContent = getFormattedTime();
+        
+        messageContent.appendChild(timeSpan);
+        messageDiv.appendChild(messageContent);
+
+        // 为AI回复添加查看思考过程的按钮
+        if (sender === 'bot' && thoughts) {
+            const viewThoughtsButton = document.createElement('button');
+            viewThoughtsButton.classList.add('view-thoughts-button');
+            viewThoughtsButton.textContent = '查看思考过程';
+            viewThoughtsButton.onclick = () => showThoughts(thoughts);
+            messageDiv.appendChild(viewThoughtsButton);
+
+            // 存储这条消息的思考过程
+            messageThoughts.set(messageDiv, thoughts);
+        }
+
         chatMessages.appendChild(messageDiv);
         chatMessages.scrollTop = chatMessages.scrollHeight;
     }
 
+    // 标签页切换功能
+    tabButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const tabId = button.getAttribute('data-tab');
+            
+            // 更新按钮状态
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+            
+            // 更新内容显示
+            tabPanes.forEach(pane => {
+                if (pane.id === `${tabId}-tab`) {
+                    pane.classList.add('active');
+                } else {
+                    pane.classList.remove('active');
+                }
+            });
+        });
+    });
+
+    // 显示思考过程函数
+    function showThoughts(thoughts) {
+        if (thoughts && thoughts.length > 0) {
+            // 预览标签显示思考过程
+            const formattedThoughts = thoughts.map(thought => {
+                const safeThought = thought.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                return `<div class="thought-item">${safeThought}</div>`;
+            }).join('');
+            
+            generatedContent.innerHTML = formattedThoughts;
+            
+            // 代码标签显示原始内容
+            generatedCode.textContent = thoughts.join('\n');
+            
+            // 激活预览标签
+            tabButtons[0].click();
+        }
+    }
+
     // 事件监听
     sendButton.addEventListener('click', sendMessage);
-    generateButton.addEventListener('click', generateContent); // 确保绑定事件
-    stopButton.addEventListener('click', stopGeneration); // 绑定终止按钮事件
+    stopButton.addEventListener('click', stopGeneration);
     
     userInput.addEventListener('keypress', function(e) {
         if (e.key === 'Enter') {
             sendMessage();
         }
     });
-
-    // 添加生成内容的初始HTML结构
-    const generatedContentContainer = document.createElement('div');
-    generatedContentContainer.id = 'generated-content';
-    generatedContentContainer.style.display = 'none';
-    generatedContentContainer.innerHTML = '<p>生成的内容将在这里显示。</p>';
-    document.body.appendChild(generatedContentContainer);
 });

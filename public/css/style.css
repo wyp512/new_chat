@@ -1,145 +1,239 @@
+/* 基础样式 */
 body {
-    font-family: 'Arial', sans-serif;
+    font-family: 'Noto Sans SC', sans-serif;
     margin: 0;
-    padding: 0;
-    background-color: #f5f5f5;
+    padding: 20px;
+    background-color: #f0f2f5;
     color: #333;
+    line-height: 1.6;
 }
 
+/* 主容器布局 */
+.main-container {
+    display: flex;
+    gap: 20px;
+    max-width: 1600px;
+    margin: 0 auto;
+    height: calc(100vh - 40px);
+}
+
+/* 左侧聊天区域 */
 .chat-container {
-    max-width: 800px;
-    margin: 20px auto;
+    flex: 1;
     background-color: white;
-    border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    min-width: 400px;
 }
 
 .chat-header {
-    padding: 20px;
+    padding: 16px 24px;
     background-color: #4a6fa5;
     color: white;
 }
 
-.chat-header h1 {
+.header-content h1 {
     margin: 0;
     font-size: 24px;
 }
 
-.chat-header p {
+.header-content p {
     margin: 5px 0 0;
     font-size: 14px;
     opacity: 0.9;
 }
 
 .chat-messages {
-    padding: 20px;
-    height: 400px;
+    flex: 1;
+    padding: 24px;
     overflow-y: auto;
-    border-bottom: 1px solid #eee;
+    scroll-behavior: smooth;
 }
 
 .message {
-    margin-bottom: 15px;
-    padding: 10px 15px;
-    border-radius: 18px;
-    max-width: 70%;
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    max-width: 80%;
+}
+
+.message-content {
+    padding: 12px 16px;
+    border-radius: 12px;
+    position: relative;
+}
+
+.message-time {
+    font-size: 12px;
+    color: #999;
+    margin-top: 4px;
 }
 
 .bot-message {
-    background-color: #e9f5ff;
     align-self: flex-start;
-    margin-right: auto;
+}
+
+.bot-message .message-content {
+    background-color: #f1f5f9;
+    color: #1a1a1a;
 }
 
 .user-message {
-    background-color: #4a6fa5;
-    color: white;
     align-self: flex-end;
-    margin-left: auto;
 }
 
-.generated-content {
-    padding: 20px;
-    border-bottom: 1px solid #eee;
-    background-color: #f9f9f9;
-    display: none;
+.user-message .message-content {
+    background-color: #4a6fa5;
+    color: white;
 }
 
 .input-area {
+    padding: 16px;
+    border-top: 1px solid #eee;
     display: flex;
-    padding: 15px;
-    background-color: white;
+    gap: 10px;
 }
 
-.input-area input {
+#user-input {
     flex: 1;
-    padding: 10px 15px;
+    padding: 12px;
     border: 1px solid #ddd;
-    border-radius: 20px;
+    border-radius: 8px;
+    font-size: 14px;
     outline: none;
-    font-size: 16px;
+    transition: border-color 0.3s;
 }
 
-.input-area button {
-    margin-left: 10px;
-    padding: 10px 20px;
+#user-input:focus {
+    border-color: #4a6fa5;
+}
+
+button {
+    padding: 0 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#send-button {
     background-color: #4a6fa5;
     color: white;
-    border: none;
-    border-radius: 20px;
-    cursor: pointer;
-    font-size: 16px;
 }
 
-.input-area button:hover {
-    background-color: #3a5a80;
+#send-button:hover {
+    background-color: #3d5d8f;
 }
 
-.input-area button#stop-button {
-    background-color: #d9534f;
+#stop-button {
+    background-color: #f1f5f9;
+    color: #666;
 }
 
-.input-area button#stop-button:hover {
-    background-color: #c9302c;
+#stop-button:hover {
+    background-color: #e2e8f0;
 }
 
-/* 预览和代码样式 */
-.preview-tab, .code-tab {
-    padding: 10px;
-    margin-top: 10px;
-    background-color: white;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-}
-
-/* 主容器布局 */
-.main-container {
-    display: flex;
-    max-width: 1200px;
-    margin: 20px auto;
-    gap: 20px;
-}
-
-/* 生成展示框样式 */
-.display-container {
+/* 右侧结果展示区域 */
+.result-container {
     flex: 1;
-    background-color: #ffffff;
-    border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    padding: 20px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    min-width: 400px;
+}
+
+.result-container h2 {
+    margin: 0;
+    font-size: 24px;
+    color: #1a1a1a;
+}
+
+.subtitle {
+    margin: 5px 0 20px;
+    color: #666;
+    font-size: 14px;
+}
+
+/* 标签页样式 */
+.tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 16px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+}
+
+.tab-button {
+    background: none;
+    border: none;
+    padding: 8px 16px;
+    font-size: 14px;
+    color: #666;
+    cursor: pointer;
+    border-radius: 6px;
+}
+
+.tab-button:hover {
+    background-color: #f1f5f9;
+}
+
+.tab-button.active {
+    background-color: #4a6fa5;
+    color: white;
+}
+
+.tab-content {
+    flex: 1;
+    overflow: hidden;
+}
+
+.tab-pane {
+    display: none;
+    height: 100%;
     overflow-y: auto;
-    max-height: 600px;
 }
 
-.display-container h2 {
-    margin-top: 0;
-    font-size: 20px;
+.tab-pane.active {
+    display: block;
+}
+
+.preview-content {
+    padding: 16px;
+    background-color: #f8fafc;
+    border-radius: 8px;
+    min-height: 200px;
+}
+
+.code-content {
+    padding: 16px;
+    background-color: #1a1a1a;
+    color: #fff;
+    border-radius: 8px;
+    font-family: monospace;
+    white-space: pre-wrap;
+    min-height: 200px;
+}
+
+/* 查看思考过程按钮 */
+.view-thoughts-button {
+    align-self: flex-start;
+    margin-top: 8px;
+    padding: 6px 12px;
+    font-size: 12px;
+    background-color: transparent;
     color: #4a6fa5;
+    border: 1px solid #4a6fa5;
+    border-radius: 4px;
 }
 
-#generated-content {
-    margin-top: 10px;
-    font-size: 16px;
-    color: #333;
+.view-thoughts-button:hover {
+    background-color: #f1f5f9;
 }
